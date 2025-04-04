@@ -1,10 +1,16 @@
-import { Schema, SchemaFactory } from "@nestjs/mongoose";
-import { BaseSchema } from "@src/shared/core/persistence/base.schema";
-import { HydratedDocument } from "mongoose";
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
+import {
+  BaseSchema,
+  BaseSchemaOptions
+} from '@src/shared/core/persistence/base.schema'
+import { HydratedDocument } from 'mongoose'
 
-@Schema()
+@Schema(BaseSchemaOptions)
 export class Hotel extends BaseSchema {
-  name: string;
+  @Prop()
+  name: string
+  @Prop()
+  address: string
 }
-export type HotelDocument = HydratedDocument<Hotel>;
-export const HotelSchema = SchemaFactory.createForClass(Hotel);
+export type HotelDocument = HydratedDocument<Hotel>
+export const HotelSchema = SchemaFactory.createForClass(Hotel)

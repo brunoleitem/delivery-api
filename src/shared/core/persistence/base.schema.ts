@@ -1,15 +1,12 @@
+import { Prop, SchemaOptions } from '@nestjs/mongoose'
 
-import { Prop } from '@nestjs/mongoose';
+export const BaseSchemaOptions: SchemaOptions = {
+  timestamps: true,
+  virtuals: true,
+  versionKey: false
+}
 
 export class BaseSchema {
-  _id: string;
-
-  @Prop({ type: Date, default: Date.now })
-  createdAt: Date;
-
-  @Prop({ type: Date, default: Date.now })
-  updatedAt: Date;
-
-  @Prop({ type: Date })
-  removedAt?: Date;
+  @Prop({ type: String, alias: 'id' })
+  _id?: string
 }
