@@ -7,8 +7,8 @@ import {
   Post
 } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateHotelCommand } from '../core/command/create-hotel.command'
-import { ListHotelQuery } from '../core/query/list-hotel.query'
+import { CreateHotelCommand } from '../core/cqrs/command/create-hotel.command'
+import { ListHotelQuery } from '../core/cqrs/query/list-hotel.query'
 import { HotelRequest } from './hotel-request.namespace'
 
 @Controller('hotel')
