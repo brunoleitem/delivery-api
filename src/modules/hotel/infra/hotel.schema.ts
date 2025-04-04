@@ -5,11 +5,11 @@ import {
 } from '@src/shared/core/persistence/base.schema'
 import { HydratedDocument } from 'mongoose'
 
-@Schema(BaseSchemaOptions)
+@Schema({...BaseSchemaOptions, collection: 'hotel'})
 export class Hotel extends BaseSchema {
-  @Prop()
+  @Prop({ required: true })
   name: string
-  @Prop()
+  @Prop({ required: true })
   address: string
 }
 export type HotelDocument = HydratedDocument<Hotel>

@@ -7,7 +7,7 @@ export class CreateHotelHandler implements ICommandHandler<CreateHotelCommand> {
   constructor(private readonly hotelRepository: HotelRepository) {}
 
   async execute(command: CreateHotelCommand): Promise<void> {
-    const { name } = command
-    await this.hotelRepository.create({ name })
+    const { name, address} = command
+    await this.hotelRepository.create({ name, address })
   }
 }

@@ -1,5 +1,9 @@
+import { IsString } from 'class-validator'
 export namespace HotelRequest {
-  export type CreateHotelBody = {
+  export class CreateHotelBody {
+    @IsString()
     name: string
+    @IsString()
+    address: string
   }
 }

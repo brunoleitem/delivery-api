@@ -1,23 +1,38 @@
-import { AggregateRoot } from '@nestjs/cqrs'
+import { BaseEntity } from '@src/shared/core/domain/base.entity'
+import mongoose from 'mongoose'
 
-export class HotelDomain extends AggregateRoot {
-  constructor(
-    public readonly id: string,
-    public readonly name: string,
-    public readonly address: string
-  ) {
-    super()
-  }
+interface HotelProps {
+  name: string
+  address: string
+}
 
-  getId(): string {
-    return this.id
+export class HotelDomain extends BaseEntity<HotelProps> {
+  constructor(props: HotelProps, id?: string) {
+    super(props, id ? new mongoose.Types.ObjectId(id) : undefined)
   }
 
   getName(): string {
-    return this.name
+    return this.props.name
   }
 
   getAddress(): string {
-    return this.address
+    return this.props.address
   }
+
+  setName(name: string): void {
+    this.props.name = name
+  }
+
+  setAddress(address: string): void {
+    this.props.address = address
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.getName(),
+      address: this.getAddress()
+    }
+  }
+  
 }

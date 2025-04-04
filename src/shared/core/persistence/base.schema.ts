@@ -1,4 +1,5 @@
 import { Prop, SchemaOptions } from '@nestjs/mongoose'
+import { Types } from 'mongoose'
 
 export const BaseSchemaOptions: SchemaOptions = {
   timestamps: true,
@@ -7,6 +8,5 @@ export const BaseSchemaOptions: SchemaOptions = {
 }
 
 export class BaseSchema {
-  @Prop({ type: String, alias: 'id' })
-  _id?: string
+
 }

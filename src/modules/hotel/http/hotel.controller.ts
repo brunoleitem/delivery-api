@@ -21,7 +21,7 @@ export class HotelController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createHotel(@Body() body: HotelRequest.CreateHotelBody) {
-    return await this.commandBus.execute(new CreateHotelCommand(body.name))
+    return await this.commandBus.execute(new CreateHotelCommand(body.name, body.address))
   }
 
   @Get()
