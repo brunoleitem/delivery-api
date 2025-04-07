@@ -1,7 +1,7 @@
 import { Logger, Module } from '@nestjs/common'
 import { MongooseModule as NestJsMongooseModule } from '@nestjs/mongoose'
-import { ConfigModule } from '../config/config-module'
-import { ConfigService } from '../config/config-service'
+import { ConfigModule } from '../config/config.module'
+import { ConfigService } from '../config/config.service'
 
 @Module({
   imports: [

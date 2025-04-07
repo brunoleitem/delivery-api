@@ -1,15 +1,18 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from './shared/module/config/config-module'
-import { MongooseModule } from './shared/module/persistence/mongoose-module'
 import { CqrsModule } from '@nestjs/cqrs'
-import { HotelModule } from './modules/hotel/hotel.module'
+import { UserModule } from './modules/identity/user.module'
+import { JwtModule } from './shared/module/auth/jwt.module'
+import { ConfigModule } from './shared/module/config/config.module'
+import { MongooseModule } from './shared/module/persistence/mongoose.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule,
     CqrsModule.forRoot(),
-    HotelModule
+    JwtModule.forRoot(),
+    MongooseModule,
+
+    UserModule
   ]
 })
 export class AppModule {}

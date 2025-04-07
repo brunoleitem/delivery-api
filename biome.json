@@ -38,7 +38,8 @@
       },
       "complexity": {
         "noStaticOnlyClass": "off",
-        "useLiteralKeys": "off"
+        "useLiteralKeys": "off",
+        "noUselessConstructor": "off"
       }
     }
   },

@@ -3,8 +3,8 @@ import {
   ConfigModule as NestConfigModule,
   type ConfigModuleOptions as NestConfigModuleOptions
 } from '@nestjs/config'
-import { factory } from './config-factory'
-import { ConfigService } from './config-service'
+import { factory } from './config.factory'
+import { ConfigService } from './config.service'
 
 export class ConfigModule {
   static forRoot(options?: NestConfigModuleOptions): DynamicModule {

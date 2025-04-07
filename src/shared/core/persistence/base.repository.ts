@@ -1,61 +1,91 @@
-import type { HydratedDocument, Model } from 'mongoose'
+import { FilterQuery, HydratedDocument, Model, UpdateQuery } from 'mongoose'
 
-export abstract class BaseRepository<T> {
-  constructor(private readonly model: Model<T>) {}
+interface PaginateOptions {
+  page: number
+  limit: number
+  filter?: FilterQuery<any>
+}
 
-  async create(item: T): Promise<HydratedDocument<T>> {
-    return this.model.create(item)
-  }
+export abstract class BaseRepository<
+  TModel extends HydratedDocument<any, any, any>,
+  TEntity
+> {
+  protected constructor(protected readonly model: Model<TModel>) {}
 
-  async findById(
-    id: string,
-    populate?: string[]
-  ): Promise<HydratedDocument<T> | null> {
-    return this.model.findById(id).populate(populate)
+  async create(entity: TEntity): Promise<TEntity> {
+    const created = new this.model(this.mapToSchema(entity))
+    const result = await created.save()
+    return this.mapToEntity(result)
   }
 
   async findByField(
-    field: string,
-    value: string,
-    populate?: string[]
-  ): Promise<HydratedDocument<T> | null> {
-    return this.model
-      .findOne({
-        [field]: value
-      } as Record<string, any>)
-      .populate(populate)
+    field: keyof TModel,
+    value: string | number
+  ): Promise<TEntity | null> {
+    const doc = await this.model
+      .findOne({ [field]: value, deletedAt: null } as any)
+      .exec()
+    return doc ? this.mapToEntity(doc) : null
   }
 
-  async findMany(
-    conditions: { field?: string; value?: string }[],
-    populate?: string[]
-  ): Promise<HydratedDocument<T>[]> {
-    const query = conditions.reduce(
-      (acc, condition) => {
-        if (condition.field && condition.value) {
-          acc[condition.field] = condition.value
-        }
-        return acc
-      },
-      {} as Record<string, any>
-    )
-
-    return this.model.find(query).populate(populate)
+  async findById(id: string): Promise<TEntity | null> {
+    const doc = await this.model
+      .findOne({ _id: id, deletedAt: null } as any)
+      .exec()
+    return doc ? this.mapToEntity(doc) : null
   }
 
-  async findAll(populate?: string[]): Promise<HydratedDocument<T>[]> {
-    return this.model.find().populate(populate)
+  async findAll(filter: FilterQuery<TModel> = {}): Promise<TEntity[]> {
+    const docs = await this.model.find({ ...filter, deletedAt: null }).exec()
+    return docs.map(this.mapToEntity)
   }
 
   async update(
     id: string,
-    item: Partial<T>
-  ): Promise<HydratedDocument<T> | null> {
-    return this.model.findByIdAndUpdate(id, item, { new: true })
+    update: UpdateQuery<TModel>
+  ): Promise<TEntity | null> {
+    const doc = await this.model
+      .findOneAndUpdate({ _id: id, deletedAt: null } as any, update, {
+        new: true
+      })
+      .exec()
+    return doc ? this.mapToEntity(doc) : null
   }
 
-  async delete(id: string): Promise<void> {
-    return await this.model.findByIdAndDelete(id)
+  async delete(id: string): Promise<boolean> {
+    const result = await this.model.deleteOne({ _id: id }).exec()
+    return result.deletedCount > 0
   }
 
+  async softDelete(id: string): Promise<boolean> {
+    const res = await this.model
+      .updateOne({ _id: id, deletedAt: null } as any, { deletedAt: new Date() })
+      .exec()
+    return res.modifiedCount > 0
+  }
+
+  async paginate({ page, limit, filter = {} }: PaginateOptions): Promise<{
+    data: TEntity[]
+    total: number
+    page: number
+    limit: number
+  }> {
+    const skip = (page - 1) * limit
+    const query = { ...filter, deletedAt: null } as FilterQuery<TModel>
+
+    const [data, total] = await Promise.all([
+      this.model.find(query).skip(skip).limit(limit).exec(),
+      this.model.countDocuments(query)
+    ])
+
+    return {
+      data: data.map(this.mapToEntity),
+      total,
+      page,
+      limit
+    }
+  }
+
+  protected abstract mapToEntity(model: TModel): TEntity
+  protected abstract mapToSchema(entity: TEntity): any
 }

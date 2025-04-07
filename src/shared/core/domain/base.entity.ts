@@ -1,15 +1,21 @@
-import mongoose from 'mongoose'
-
 export abstract class BaseEntity<Props> {
-  private readonly _id:  mongoose.Types.ObjectId
+  protected readonly _id: string
   protected readonly props: Props
+  protected createdAt: Date
+  protected updatedAt: Date
 
-  constructor(props: Props, id?:  mongoose.Types.ObjectId) {
+  constructor(props: Props, id?: string) {
+    this._id = id
     this.props = props
-    this._id = id 
+    this.createdAt = new Date()
+    this.updatedAt = new Date()
   }
 
-  get id(): string {
-    return this._id.toString()
+  public get id(): string {
+    return this._id
+  }
+
+  public update() {
+    this.updatedAt = new Date()
   }
 }
