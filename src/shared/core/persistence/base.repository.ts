@@ -1,4 +1,5 @@
 import { FilterQuery, HydratedDocument, Model, UpdateQuery } from 'mongoose'
+import { IPaginateResponse } from './persistence.dto'
 
 interface PaginateOptions {
   page: number
@@ -64,12 +65,11 @@ export abstract class BaseRepository<
     return res.modifiedCount > 0
   }
 
-  async paginate({ page, limit, filter = {} }: PaginateOptions): Promise<{
-    data: TEntity[]
-    total: number
-    page: number
-    limit: number
-  }> {
+  async paginate({
+    page,
+    limit,
+    filter = {}
+  }: PaginateOptions): Promise<IPaginateResponse<TEntity>> {
     const skip = (page - 1) * limit
     const query = { ...filter, deletedAt: null } as FilterQuery<TModel>
 

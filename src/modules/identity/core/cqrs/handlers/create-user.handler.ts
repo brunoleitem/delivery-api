@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common'
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
 import { UserRepository } from '../../../infra/user.repository'
 import { User } from '../../domain/User'
@@ -9,6 +10,10 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
 
   async execute(command: CreateUserCommand): Promise<void> {
     const { name, password, email, isDriver } = command
+    const existingUser = await this.userRepository.findByField('email', email)
+    if (existingUser) {
+      throw new HttpException('User already exists', 400)
+    }
     const user = new User({ name, email, password: password, isDriver })
     await user.hashPassword()
     await this.userRepository.create(user)

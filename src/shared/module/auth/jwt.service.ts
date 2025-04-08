@@ -9,7 +9,9 @@ export class JwtService {
     const payload = {
       user: {
         id: user.id,
-        email: user.getEmail()
+        email: user.getEmail(),
+        name: user.getName(),
+        isDriver: user.getIsDriver()
       }
     }
     const accessToken = this.nestJsJwtService.sign(payload)

@@ -27,9 +27,9 @@ export class AuthenticateUserHandler
       throw new HttpException('Invalid password', HttpStatus.BAD_REQUEST)
     }
 
-    const token = await this.jwtService.generateToken(user)
+    const { accessToken } = await this.jwtService.generateToken(user)
     return {
-      accessToken: token.accessToken
+      accessToken
     }
   }
 }
