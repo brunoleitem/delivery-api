@@ -29,6 +29,15 @@ export class JwtService {
     return true
   }
 
+  async verifyWs(ctx: ExecutionContext) {
+    const client = ctx.switchToWs().getClient()
+    const token = client.handshake.query.token as string
+    if (!token) return false
+    const payload = await this.nestJsJwtService.verify(token)
+    client.user = payload.user
+    return true
+  }
+
   private extractFromHeader(request: Request) {
     const authHeader = request.headers['authorization']
     if (!authHeader) {

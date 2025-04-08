@@ -31,7 +31,6 @@ export class DeliveryController {
     @Body() body: DeliveryNamespace.CreateBody,
     @JwtPayload() payload: IJwtPayload
   ) {
-    console.log(body)
     return await this.commandBus.execute(
       new CreateDeliveryCommand(
         body.origin,
