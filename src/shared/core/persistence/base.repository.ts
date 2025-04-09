@@ -1,4 +1,4 @@
-import { FilterQuery, HydratedDocument, Model, UpdateQuery } from 'mongoose'
+import { FilterQuery, HydratedDocument, Model } from 'mongoose'
 import { IPaginateResponse } from './persistence.dto'
 
 interface PaginateOptions {
@@ -36,19 +36,32 @@ export abstract class BaseRepository<
     return doc ? this.mapToEntity(doc) : null
   }
 
+  async findBy(
+    filters: Partial<Record<keyof TModel, any>>
+  ): Promise<TEntity | null> {
+    const query = {
+      ...filters,
+      deletedAt: null
+    }
+
+    const doc = await this.model.findOne(query as any).exec()
+    return doc ? this.mapToEntity(doc) : null
+  }
+
   async findAll(filter: FilterQuery<TModel> = {}): Promise<TEntity[]> {
     const docs = await this.model.find({ ...filter, deletedAt: null }).exec()
     return docs.map(this.mapToEntity)
   }
 
-  async update(
-    id: string,
-    update: UpdateQuery<TModel>
-  ): Promise<TEntity | null> {
+  async update(id: string, entity: TEntity): Promise<TEntity | null> {
     const doc = await this.model
-      .findOneAndUpdate({ _id: id, deletedAt: null } as any, update, {
-        new: true
-      })
+      .findOneAndUpdate(
+        { _id: id, deletedAt: null } as any,
+        this.mapToSchema(entity),
+        {
+          new: true
+        }
+      )
       .exec()
     return doc ? this.mapToEntity(doc) : null
   }

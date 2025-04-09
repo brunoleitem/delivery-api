@@ -1,8 +1,8 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
 import { DeliveryRepository } from '@src/modules/delivery/infra/delivery.repository'
+import { DeliveryCreatedEvent } from '@src/shared/domain/events/delivery/delivery-created.event'
 import { Delivery } from '../../domain/delivery'
 import { Coordinates, DeliveryStatus } from '../../domain/value-objects'
-import { DeliveryCreatedEvent } from '../../events/delivery-created.event'
 import { CreateDeliveryCommand } from '../command/create-delivery.command'
 
 @CommandHandler(CreateDeliveryCommand)
@@ -27,7 +27,7 @@ export class CreateDeliveryHandler
       packageInfo,
       status: DeliveryStatus.Pending
     })
-    const created = await this.deliveryRepository.create(delivery)
-    this.eventBus.publish(new DeliveryCreatedEvent(created.id, customerId))
+    await this.deliveryRepository.create(delivery)
+    this.eventBus.publish(new DeliveryCreatedEvent(customerId))
   }
 }
