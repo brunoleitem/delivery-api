@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus } from '@nestjs/common'
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
+import { UserRepository } from '@src/modules/identity/infra/user.repository'
 import { JwtService } from '@src/shared/module/auth/jwt.service'
-import { UserRepository } from '../../../infra/user.repository'
-import { AuthenticateUserCommand } from '../command/authenticate-user.command'
+import { AuthenticateUserCommand } from '../authenticate-user.command'
 
 @CommandHandler(AuthenticateUserCommand)
 export class AuthenticateUserHandler

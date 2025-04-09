@@ -51,9 +51,14 @@ export class Delivery extends BaseEntity<DeliveryProps> {
   setDriverId(driverId: string): void {
     this.props.driverId = driverId
   }
-
   setPackageInfo(packageInfo: string): void {
     this.props.packageInfo = packageInfo
+  }
+
+  acceptDelivery(driverId: string): void {
+    this.props.driverId = driverId
+    this.props.status = DeliveryStatus.Accepted
+    this.update()
   }
 
   toJSON() {

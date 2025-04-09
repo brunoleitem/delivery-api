@@ -1,9 +1,9 @@
 import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
 import { DeliveryRepository } from '@src/modules/delivery/infra/delivery.repository'
 import { DeliveryCreatedEvent } from '@src/shared/domain/events/delivery/delivery-created.event'
-import { Delivery } from '../../domain/delivery'
-import { Coordinates, DeliveryStatus } from '../../domain/value-objects'
-import { CreateDeliveryCommand } from '../command/create-delivery.command'
+import { Delivery } from '../../../domain/delivery'
+import { Coordinates, DeliveryStatus } from '../../../domain/value-objects'
+import { CreateDeliveryCommand } from '../create-delivery.command'
 
 @CommandHandler(CreateDeliveryCommand)
 export class CreateDeliveryHandler

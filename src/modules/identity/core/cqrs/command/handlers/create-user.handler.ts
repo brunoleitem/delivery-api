@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common'
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
-import { UserRepository } from '../../../infra/user.repository'
-import { User } from '../../domain/User'
-import { CreateUserCommand } from '../command/create-user.command'
+import { UserRepository } from '@src/modules/identity/infra/user.repository'
+import { User } from '../../../domain/User'
+import { CreateUserCommand } from '../create-user.command'
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {

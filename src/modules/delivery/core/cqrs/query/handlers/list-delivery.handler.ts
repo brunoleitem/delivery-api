@@ -1,8 +1,8 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs'
 import { DeliveryRepository } from '@src/modules/delivery/infra/delivery.repository'
 import { IPaginateResponse } from '@src/shared/core/persistence/persistence.dto'
-import { Delivery } from '../../domain/delivery'
-import { ListDeliveryQuery } from '../query/list-delivery.query'
+import { Delivery } from '../../../domain/delivery'
+import { ListDeliveryQuery } from '../list-delivery.query'
 
 @QueryHandler(ListDeliveryQuery)
 export class ListDeliveryHandler implements IQueryHandler<ListDeliveryQuery> {
@@ -16,7 +16,7 @@ export class ListDeliveryHandler implements IQueryHandler<ListDeliveryQuery> {
       limit,
       page,
       filter: {
-        customerId: query.customerId
+        $or: [{ customerId: query.customerId }, { driverId: query.customerId }]
       }
     })
   }
